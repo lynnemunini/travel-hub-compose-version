@@ -86,6 +86,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("androidx.activity:activity-ktx:1.8.0")
     implementation("com.google.code.gson:gson:2.10.1")
+    // SplashScreen
+    implementation ("androidx.core:core-splashscreen:1.1.0-alpha02")
+
 }
 // Allow references to generated code
 kapt {

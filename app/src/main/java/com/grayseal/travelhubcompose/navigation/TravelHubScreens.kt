@@ -1,7 +1,6 @@
 package com.grayseal.travelhubcompose.navigation
 
 enum class TravelHubScreens {
-    SplashScreen,
     SignInScreen,
     SignUpScreen,
     HomeScreen,
@@ -9,7 +8,6 @@ enum class TravelHubScreens {
 
     companion object {
         fun fromRoute(route: String): TravelHubScreens = when (route.substringBefore("/")) {
-            SplashScreen.name -> SplashScreen
             SignInScreen.name -> SignInScreen
             SignUpScreen.name -> SignUpScreen
             HomeScreen.name -> HomeScreen
