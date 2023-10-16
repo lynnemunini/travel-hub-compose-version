@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1077899101372",
+    "project_id": "travelhub-compose-version",
+    "storage_bucket": "travelhub-compose-version.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077899101372:android:ff2c8b200ef61085337cb9",
+        "android_client_info": {
+          "package_name": "com.grayseal.travelhubcompose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1077899101372-ro24bq79arf3gt6mhi43rq0jotae5t4s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.grayseal.travelhubcompose",
+            "certificate_hash": "f5afd9fb454e46ebdfc47db9279add006f847369"
+          }
+        },
+        {
+          "client_id": "1077899101372-hppjou6o6nsiv0jjgde4jrtib9v8dj1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzjJSgaM86doJKNHpdFuI9v7QQ98hZnBI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1077899101372-hppjou6o6nsiv0jjgde4jrtib9v8dj1r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
