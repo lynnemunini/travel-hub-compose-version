@@ -1,6 +1,9 @@
 package com.grayseal.travelhubcompose.ui.screens.signup
 
+import android.content.Intent
 import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.result.ActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.grayseal.travelhubcompose.ContinueWithGoogle
 import com.grayseal.travelhubcompose.EmailInput
 import com.grayseal.travelhubcompose.PasswordInput
@@ -50,21 +55,28 @@ import com.grayseal.travelhubcompose.ui.theme.manropeFamily
 import kotlinx.coroutines.launch
 
 @Composable
-fun SignUpScreen(navController: NavController) {
-    UserForm(navController)
+fun SignUpScreen(
+    navController: NavController,
+    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
+) {
+    UserForm(navController, launcher)
 }
 
 @Composable
-fun UserForm(navController: NavController) {
+fun UserForm(
+    navController: NavController,
+    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
+) {
     val signUpViewModel: SignUpViewModel = viewModel()
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
     val passwordFocusRequest = FocusRequester.Default
     val context = LocalContext.current
+    val token = stringResource(id = R.string.server_client_id)
 
     var registrationResult by remember { mutableStateOf<RegistrationResult?>(null) }
-    var loading by remember { mutableStateOf(false) } // Add loading state
+    var loading by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -76,7 +88,13 @@ fun UserForm(navController: NavController) {
         passwordVisibility = passwordVisibility,
         passwordFocusRequest = passwordFocusRequest,
         continueWithGoogle = {
-                             
+            val gso =
+                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(token)
+                    .requestEmail()
+                    .build()
+            val googleSignInClient = GoogleSignIn.getClient(context, gso)
+            launcher.launch(googleSignInClient.signInIntent)
         },
         submit = {
             val userEmail = email.value
@@ -95,8 +113,7 @@ fun UserForm(navController: NavController) {
     registrationResult?.let { result ->
         when (result) {
             is RegistrationResult.Success -> {
-                // Registration was successful
-                // Navigate to the next screen
+                navController.navigate(TravelHubScreens.HomeScreen.name)
             }
 
             is RegistrationResult.InvalidEmail -> {
