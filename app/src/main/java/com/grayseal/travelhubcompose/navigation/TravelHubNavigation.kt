@@ -6,10 +6,12 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.grayseal.travelhubcompose.ui.screens.details.DetailsScreen
+import com.grayseal.travelhubcompose.ui.screens.main.EntriesViewModel
 import com.grayseal.travelhubcompose.ui.screens.main.HomeScreen
 import com.grayseal.travelhubcompose.ui.screens.signin.SignInScreen
 import com.grayseal.travelhubcompose.ui.screens.signup.SignUpScreen
@@ -28,6 +30,7 @@ fun TravelHubNavigation() {
                 Toast.makeText(context, "${it.localizedMessage}", Toast.LENGTH_LONG).show()
             }
         )
+    val entriesViewModel: EntriesViewModel = viewModel()
     NavHost(navController = navController, startDestination = TravelHubScreens.HomeScreen.name) {
         composable(TravelHubScreens.SignUpScreen.name) {
             SignUpScreen(navController = navController, launcher)
@@ -36,7 +39,7 @@ fun TravelHubNavigation() {
             SignInScreen(navController = navController, launcher)
         }
         composable(TravelHubScreens.HomeScreen.name) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, entriesViewModel)
         }
         composable(TravelHubScreens.DetailsScreen.name) {
             DetailsScreen(navController = navController)

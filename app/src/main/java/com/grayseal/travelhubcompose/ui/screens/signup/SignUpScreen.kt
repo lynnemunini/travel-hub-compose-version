@@ -44,10 +44,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.grayseal.travelhubcompose.R
 import com.grayseal.travelhubcompose.components.ContinueWithGoogle
 import com.grayseal.travelhubcompose.components.EmailInput
 import com.grayseal.travelhubcompose.components.PasswordInput
-import com.grayseal.travelhubcompose.R
 import com.grayseal.travelhubcompose.components.SubmitButton
 import com.grayseal.travelhubcompose.navigation.TravelHubScreens
 import com.grayseal.travelhubcompose.ui.theme.Yellow200
@@ -193,9 +193,6 @@ fun UIComponents(
         )
         if (loading) {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .width(38.dp)
-                    .height(38.dp),
                 color = Yellow200,
             )
         }
