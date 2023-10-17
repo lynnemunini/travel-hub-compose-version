@@ -159,7 +159,6 @@ fun HomeScreenContents(
     }
 }
 
-
 @Composable
 fun TravelItemCard(travelItem: TravelItem) {
     Card(
@@ -176,7 +175,7 @@ fun TravelItemCard(travelItem: TravelItem) {
                 .data(travelItem.photos[2])
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.travel),
+            placeholder = painterResource(R.drawable.placeholder),
             contentDescription = "House",
             contentScale = ContentScale.Crop,
             modifier = Modifier

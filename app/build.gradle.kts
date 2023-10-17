@@ -87,11 +87,8 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.8.0")
     implementation("com.google.code.gson:gson:2.10.1")
     // SplashScreen
-    implementation ("androidx.core:core-splashscreen:1.1.0-alpha02")
-
+    implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha02")
-    // Firebase AuthUI
-    implementation("com.firebaseui:firebase-ui-auth:7.1.1")
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
 }
