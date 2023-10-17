@@ -180,8 +180,8 @@ fun UIComponents(
             painter = painterResource(id = R.drawable.travel),
             contentDescription = "Travel Image",
             Modifier
-                .width(300.dp)
-                .height(300.dp)
+                .width(270.dp)
+                .height(270.dp)
                 .padding(vertical = 20.dp)
         )
         EmailInput(emailState = email)
@@ -207,7 +207,7 @@ fun UIComponents(
                     style = SpanStyle(
                         textDecoration = TextDecoration.Underline,
                         color = Yellow200,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 ) {
                     append("Sign in")
@@ -220,7 +220,11 @@ fun UIComponents(
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.clickable { navController.navigate(TravelHubScreens.SignInScreen.name) }
+            modifier = Modifier.clickable(
+                onClick = {
+                    navController.navigate(TravelHubScreens.SignInScreen.name)
+                }
+            )
         )
         ContinueWithGoogle(stringResource(id = R.string.sign_up_with_google), continueWithGoogle)
     }

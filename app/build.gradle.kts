@@ -91,6 +91,8 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha02")
 
+    // Firebase AuthUI
+    implementation("com.firebaseui:firebase-ui-auth:7.1.1")
 }
 // Allow references to generated code
 kapt {

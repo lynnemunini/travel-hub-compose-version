@@ -167,8 +167,8 @@ fun UIComponents(
             painter = painterResource(id = R.drawable.travel),
             contentDescription = "Travel Image",
             Modifier
-                .width(300.dp)
-                .height(300.dp)
+                .width(270.dp)
+                .height(270.dp)
                 .padding(vertical = 20.dp)
         )
         EmailInput(emailState = email)

@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.grayseal.travelhubcompose.navigation.TravelHubScreens
 import com.grayseal.travelhubcompose.ui.screens.signin.SignInScreen
 import com.grayseal.travelhubcompose.utils.rememberFirebaseAuthLauncher
 
@@ -21,6 +22,7 @@ fun HomeScreen(navController: NavController) {
         rememberFirebaseAuthLauncher(
             onAuthComplete = { result ->
                 user = result.user
+                navController.navigate(TravelHubScreens.HomeScreen.name)
             },
             onAuthError = {
                 user = null
