@@ -1,5 +1,6 @@
 package com.grayseal.travelhubcompose.ui.screens.signup
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,16 +12,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -31,6 +37,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.grayseal.travelhubcompose.ContinueWithGoogle
 import com.grayseal.travelhubcompose.EmailInput
@@ -40,6 +47,7 @@ import com.grayseal.travelhubcompose.SubmitButton
 import com.grayseal.travelhubcompose.navigation.TravelHubScreens
 import com.grayseal.travelhubcompose.ui.theme.Yellow200
 import com.grayseal.travelhubcompose.ui.theme.manropeFamily
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(navController: NavController) {
@@ -48,24 +56,71 @@ fun SignUpScreen(navController: NavController) {
 
 @Composable
 fun UserForm(navController: NavController) {
-    val email = rememberSaveable {
-        mutableStateOf("")
-    }
-    val password = rememberSaveable {
-        mutableStateOf("")
-    }
-    val passwordVisibility = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val signUpViewModel: SignUpViewModel = viewModel()
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
+    val passwordVisibility = remember { mutableStateOf(false) }
     val passwordFocusRequest = FocusRequester.Default
+    val context = LocalContext.current
+
+    var registrationResult by remember { mutableStateOf<RegistrationResult?>(null) }
+    var loading by remember { mutableStateOf(false) } // Add loading state
+
+    val coroutineScope = rememberCoroutineScope()
+
     UIComponents(
         navController,
         email = email,
         password = password,
+        loading = loading,
         passwordVisibility = passwordVisibility,
-        passwordFocusRequest = passwordFocusRequest
+        passwordFocusRequest = passwordFocusRequest,
+        continueWithGoogle = {
+                             
+        },
+        submit = {
+            val userEmail = email.value
+            val userPassword = password.value
+
+            loading = true
+
+            coroutineScope.launch {
+                registrationResult = signUpViewModel.registerUser(userEmail, userPassword)
+                loading = false
+            }
+        }
     )
 
+
+    registrationResult?.let { result ->
+        when (result) {
+            is RegistrationResult.Success -> {
+                // Registration was successful
+                // Navigate to the next screen
+            }
+
+            is RegistrationResult.InvalidEmail -> {
+                Toast.makeText(context, "Invalid email", Toast.LENGTH_LONG)
+                    .show()
+            }
+
+            is RegistrationResult.InvalidPassword -> {
+                Toast.makeText(
+                    context,
+                    "Password must be at least 6 characters long",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            is RegistrationResult.Failure -> {
+                Toast.makeText(
+                    context,
+                    "Registration failed: ${result.error}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 }
 
 @Composable
@@ -73,8 +128,11 @@ fun UIComponents(
     navController: NavController,
     email: MutableState<String>,
     password: MutableState<String>,
+    loading: Boolean,
     passwordVisibility: MutableState<Boolean>,
-    passwordFocusRequest: FocusRequester
+    passwordFocusRequest: FocusRequester,
+    continueWithGoogle: () -> Unit,
+    submit: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -116,7 +174,15 @@ fun UIComponents(
             labelId = "Password",
             passwordVisibility = passwordVisibility,
         )
-        SubmitButton(text = stringResource(id = R.string.sign_up))
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .width(38.dp)
+                    .height(38.dp),
+                color = Yellow200,
+            )
+        }
+        SubmitButton(text = stringResource(id = R.string.sign_up), submit)
         val annotatedString = buildAnnotatedString {
             withStyle(style = SpanStyle(fontWeight = FontWeight.Medium)) {
                 append("Already have an account? ")
@@ -139,6 +205,6 @@ fun UIComponents(
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.clickable { navController.navigate(TravelHubScreens.SignInScreen.name) }
         )
-        ContinueWithGoogle(stringResource(id = R.string.sign_up_with_google))
+        ContinueWithGoogle(stringResource(id = R.string.sign_up_with_google), continueWithGoogle)
     }
 }

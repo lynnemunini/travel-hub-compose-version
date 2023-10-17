@@ -207,9 +207,9 @@ fun PasswordVisibility(passwordVisibility: MutableState<Boolean>) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SubmitButton(text: String) {
+fun SubmitButton(text: String, onclick: () -> Unit) {
     Card(
-        onClick = { /*TODO*/ },
+        onClick = onclick,
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
             .fillMaxWidth()
@@ -236,12 +236,11 @@ fun SubmitButton(text: String) {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContinueWithGoogle(text: String) {
+fun ContinueWithGoogle(text: String, onclick: () -> Unit) {
     Card(
-        onClick = { /*TODO*/ },
+        onClick = onclick,
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
             .fillMaxWidth()
