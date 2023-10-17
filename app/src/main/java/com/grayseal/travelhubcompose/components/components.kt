@@ -1,11 +1,13 @@
-package com.grayseal.travelhubcompose
+package com.grayseal.travelhubcompose.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -39,6 +42,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.grayseal.travelhubcompose.R
 import com.grayseal.travelhubcompose.ui.theme.Yellow200
 import com.grayseal.travelhubcompose.ui.theme.manropeFamily
 
@@ -271,5 +275,72 @@ fun ContinueWithGoogle(text: String, onclick: () -> Unit) {
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchInputField(
+    modifier: Modifier = Modifier,
+    valueState: MutableState<String>,
+    labelId: String,
+    enabled: Boolean,
+    isSingleLine: Boolean,
+    keyBoardType: KeyboardType = KeyboardType.Ascii,
+    imeAction: ImeAction = ImeAction.Done,
+    onAction: KeyboardActions = KeyboardActions.Default
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(4.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        OutlinedTextField(
+            value = valueState.value,
+            onValueChange = {
+                valueState.value = it
+            },
+            leadingIcon = {
+                Image(
+                    painter = painterResource(id = R.drawable.search),
+                    contentDescription = "Search",
+                    modifier = Modifier
+                        .size(30.dp)
+                        .background(color = Color.Transparent),
+                    colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
+                )
+            },
+            singleLine = isSingleLine,
+            textStyle = TextStyle(
+                fontSize = 15.sp,
+                fontFamily = manropeFamily,
+                fontWeight = FontWeight.Medium
+            ),
+            enabled = enabled,
+            keyboardOptions = KeyboardOptions(keyboardType = keyBoardType, imeAction = imeAction),
+            keyboardActions = onAction,
+            modifier = Modifier
+                .fillMaxWidth(),
+            placeholder = {
+                Text(
+                    text = labelId,
+                    fontFamily = manropeFamily,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            },
+            shape = RoundedCornerShape(16.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                textColor = MaterialTheme.colorScheme.onBackground,
+                containerColor = MaterialTheme.colorScheme.background,
+                cursorColor = Yellow200,
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                selectionColors = TextSelectionColors(
+                    handleColor = Yellow200,
+                    backgroundColor = Yellow200
+                )
+            )
+        )
     }
 }
