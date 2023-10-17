@@ -77,6 +77,14 @@ fun HomeScreenContentsState(entriesViewModel: EntriesViewModel) {
     var travelItems by remember {
         mutableStateOf(listOf<TravelItem>())
     }
+    val filteredItems = remember(searchState.value, travelItems) {
+        travelItems.filter { travelItem ->
+            searchState.value.isBlank() || travelItem.location.name.contains(
+                searchState.value,
+                ignoreCase = true
+            )
+        }
+    }
 
     LaunchedEffect(entriesViewModel) {
         loading = true
@@ -90,10 +98,8 @@ fun HomeScreenContentsState(entriesViewModel: EntriesViewModel) {
         keyboardController = keyboardController,
         valid = valid,
         loading,
-        travelItems,
-    ) { searchString ->
-
-    }
+        filteredItems,
+    )
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -103,8 +109,7 @@ fun HomeScreenContents(
     keyboardController: SoftwareKeyboardController?,
     valid: Boolean,
     loading: Boolean,
-    travelItems: List<TravelItem>,
-    onSearch: (String) -> Unit = {}
+    travelItems: List<TravelItem>
 ) {
     Column(
         modifier = Modifier
@@ -121,7 +126,6 @@ fun HomeScreenContents(
             isSingleLine = false,
             onAction = KeyboardActions {
                 if (!valid) return@KeyboardActions
-                onSearch(searchState.value.trim())
                 keyboardController?.hide()
                 searchState.value = ""
             }
