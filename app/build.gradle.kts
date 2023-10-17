@@ -88,7 +88,6 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     // SplashScreen
     implementation ("androidx.core:core-splashscreen:1.1.0-alpha02")
-
 }
 // Allow references to generated code
 kapt {

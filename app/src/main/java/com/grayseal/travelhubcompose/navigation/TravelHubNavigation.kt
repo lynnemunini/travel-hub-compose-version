@@ -12,7 +12,7 @@ import com.grayseal.travelhubcompose.ui.screens.signup.SignUpScreen
 @Composable
 fun TravelHubNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = TravelHubScreens.HomeScreen.name) {
+    NavHost(navController = navController, startDestination = TravelHubScreens.SignUpScreen.name) {
 
         composable(TravelHubScreens.SignInScreen.name) {
             SignInScreen(navController = navController)
