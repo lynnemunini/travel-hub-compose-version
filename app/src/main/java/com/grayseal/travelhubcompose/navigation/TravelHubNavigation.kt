@@ -7,9 +7,11 @@ import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.grayseal.travelhubcompose.ui.screens.details.DetailsScreen
 import com.grayseal.travelhubcompose.ui.screens.main.EntriesViewModel
 import com.grayseal.travelhubcompose.ui.screens.main.HomeScreen
@@ -41,8 +43,13 @@ fun TravelHubNavigation() {
         composable(TravelHubScreens.HomeScreen.name) {
             HomeScreen(navController = navController, entriesViewModel)
         }
-        composable(TravelHubScreens.DetailsScreen.name) {
-            DetailsScreen(navController = navController)
+        val route = TravelHubScreens.DetailsScreen.name
+        composable("$route/{id}", arguments = listOf(navArgument(name = "id") {
+            type = NavType.StringType
+        })) { navBack ->
+            navBack.arguments?.getString("id").let { id ->
+                DetailsScreen(navController = navController, id = id)
+            }
         }
     }
 }
