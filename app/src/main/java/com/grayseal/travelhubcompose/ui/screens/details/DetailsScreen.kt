@@ -21,7 +21,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,16 +38,24 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.grayseal.travelhub.data.model.TravelItem
+import com.grayseal.travelhubcompose.data.model.TravelItem
 import com.grayseal.travelhubcompose.R
 import com.grayseal.travelhubcompose.ui.screens.main.EntriesViewModel
 import com.grayseal.travelhubcompose.ui.theme.Yellow200
+import com.grayseal.travelhubcompose.ui.theme.manropeFamily
 import kotlin.math.absoluteValue
 
 @Composable
@@ -230,6 +241,122 @@ fun FavoriteContainer(navController: NavController, modifier: Modifier) {
                         .align(Alignment.Center)
                 )
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun Details() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(20.dp)
+    ) {
+        Text(
+            text = "Olohoro Ndogo - a romantic Rift Valley retreat",
+            fontFamily = manropeFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 22.sp
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 6.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.star),
+                    contentDescription = "Stars",
+                    modifier = Modifier
+                        .size(22.dp)
+                )
+
+                Text(
+                    text = "4.5 Rating",
+                    fontFamily = manropeFamily,
+                    fontSize = 14.sp
+                )
+            }
+
+            Text(
+                text = "•",
+                fontFamily = manropeFamily,
+                fontSize = 14.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(horizontal = 2.dp)
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.reviews),
+                    contentDescription = "Stars",
+                    modifier = Modifier
+                        .size(18.dp)
+                )
+
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                            append("5 Reviews")
+                        }
+                    },
+                    fontFamily = manropeFamily,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
+
+            Text(
+                text = "•",
+                fontFamily = manropeFamily,
+                fontSize = 14.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(horizontal = 2.dp)
+            )
+
+            Text(
+                text = "Kajiado County, Kenya",
+                fontFamily = manropeFamily,
+                fontSize = 14.sp
+            )
+        }
+
+        Divider(
+            color = Color.LightGray,
+            thickness = 1.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 18.dp)
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Entire home hosted by Andrew",
+                fontFamily = manropeFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 19.sp
+            )
+            Image(
+                painter = painterResource(id = R.drawable.travel),
+                contentDescription = "Andrew Image",
+                modifier = Modifier
+                    .size(60.dp)
+                    .padding(start = 6.dp)
+                    .clip(CircleShape)
+            )
         }
     }
 }

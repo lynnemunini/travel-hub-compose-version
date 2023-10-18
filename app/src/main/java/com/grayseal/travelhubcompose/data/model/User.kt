@@ -1,4 +1,4 @@
-package com.grayseal.travelhub.data.model
+package com.grayseal.travelhubcompose.data.model
 
 data class User(
     val __v: Int,
@@ -17,7 +17,6 @@ data class User(
     val gender: String,
     val hasPassword: Boolean,
     val hasPaymentMethod: Boolean,
-    val interests: String,
     val isBusinessOwner: Boolean,
     val isFollowing: Boolean,
     val isPackageDue: Boolean,

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.grayseal.travelhub.data.model.TravelItem
+import com.grayseal.travelhubcompose.data.model.TravelItem
 import com.grayseal.travelhubcompose.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

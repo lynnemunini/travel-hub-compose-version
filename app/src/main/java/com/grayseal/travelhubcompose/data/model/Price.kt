@@ -1,4 +1,4 @@
-package com.grayseal.travelhub.data.model
+package com.grayseal.travelhubcompose.data.model
 
 data class Price(
     val amount: Int,

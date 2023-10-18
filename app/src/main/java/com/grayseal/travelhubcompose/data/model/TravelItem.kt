@@ -1,4 +1,4 @@
-package com.grayseal.travelhub.data.model
+package com.grayseal.travelhubcompose.data.model
 
 data class TravelItem(
     val __v: Int,
@@ -27,5 +27,6 @@ data class TravelItem(
     val timeStamp: Long,
     val type: String,
     val uniqueType: String,
-    val video: String
+    val video: String,
+    val user: User
 )

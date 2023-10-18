@@ -58,7 +58,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.grayseal.travelhub.data.model.TravelItem
+import com.grayseal.travelhubcompose.data.model.TravelItem
 import com.grayseal.travelhubcompose.R
 import com.grayseal.travelhubcompose.components.SearchInputField
 import com.grayseal.travelhubcompose.navigation.TravelHubScreens
