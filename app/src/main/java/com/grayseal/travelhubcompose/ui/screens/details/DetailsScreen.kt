@@ -1,5 +1,6 @@
 package com.grayseal.travelhubcompose.ui.screens.details
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -42,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -57,6 +59,16 @@ import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.grayseal.travelhubcompose.R
 import com.grayseal.travelhubcompose.data.model.DetailsDrawable
 import com.grayseal.travelhubcompose.data.model.TravelItem
@@ -418,7 +430,7 @@ fun Details(travelItem: TravelItem) {
                 .fillMaxWidth()
                 .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
         )
-        LocationAddress()
+        LocationAddress(travelItem)
     }
 }
 
@@ -579,7 +591,22 @@ fun Description(travelItem: TravelItem) {
 }
 
 @Composable
-fun LocationAddress() {
+fun LocationAddress(travelItem: TravelItem) {
+    val uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = false)) }
+    val location = LatLng(travelItem.location.lat, travelItem.location.lng)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(location, 16f)
+    }
+    val properties by remember {
+        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+    }
+    val marker = MarkerOptions()
+        .position(location)
+        .title(
+            toTitleCase(travelItem.name)
+        )
+        .snippet(toTitleCase(travelItem.name))
+
     Column(
         modifier = Modifier.padding(horizontal = 30.dp, vertical = 6.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -590,6 +617,35 @@ fun LocationAddress() {
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp
         )
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(220.dp)
+                .padding(top = 4.dp)
+                .clip(RoundedCornerShape(12.dp)),
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+            elevation = CardDefaults.cardElevation(0.dp)
+        ) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                properties = properties,
+                uiSettings = uiSettings,
+                cameraPositionState = cameraPositionState,
+                onMapLoaded = {
+                }
+            ) {
+                Marker(
+                    state = MarkerState(
+                        position = marker.position
+                    ),
+                    title = marker.title,
+                    snippet = marker.snippet
+                ) {
+
+                }
+            }
+        }
     }
 }
 

@@ -92,6 +92,9 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.compose.ui:ui-util:1.5.3")
+    // Maps compose library
+    implementation ("com.google.maps.android:maps-compose:2.15.0")
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
 }
 // Allow references to generated code
 kapt {
