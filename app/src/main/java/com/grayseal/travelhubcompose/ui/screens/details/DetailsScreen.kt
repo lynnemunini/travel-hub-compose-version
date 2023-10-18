@@ -1,5 +1,6 @@
 package com.grayseal.travelhubcompose.ui.screens.details
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,12 +15,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -51,8 +57,9 @@ import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.grayseal.travelhubcompose.data.model.TravelItem
 import com.grayseal.travelhubcompose.R
+import com.grayseal.travelhubcompose.data.model.DetailsDrawable
+import com.grayseal.travelhubcompose.data.model.TravelItem
 import com.grayseal.travelhubcompose.ui.screens.main.EntriesViewModel
 import com.grayseal.travelhubcompose.ui.theme.Yellow200
 import com.grayseal.travelhubcompose.ui.theme.manropeFamily
@@ -95,11 +102,12 @@ fun DetailsScreenElements(navController: NavController, travelItem: TravelItem) 
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .background(MaterialTheme.colorScheme.surface),
+            .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HorizontalImagePager(navController, images = travelItem.photos)
+        Details()
     }
 }
 
@@ -114,7 +122,7 @@ fun HorizontalImagePager(navController: NavController, images: List<String>) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
+                .height(220.dp)
                 .graphicsLayer {
                     val pageOffset = (
                             (pagerState.currentPage - page) + pagerState
@@ -245,25 +253,24 @@ fun FavoriteContainer(navController: NavController, modifier: Modifier) {
     }
 }
 
-@Preview
 @Composable
 fun Details() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(20.dp)
+            .padding(vertical = 4.dp)
     ) {
         Text(
             text = "Olohoro Ndogo - a romantic Rift Valley retreat",
             fontFamily = manropeFamily,
             fontWeight = FontWeight.Bold,
-            fontSize = 22.sp
+            fontSize = 23.sp,
+            modifier = Modifier.padding(horizontal = 20.dp)
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 6.dp),
+                .padding(top = 6.dp, start = 20.dp, end = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
@@ -278,7 +285,7 @@ fun Details() {
                 )
 
                 Text(
-                    text = "4.5 Rating",
+                    text = "4.5",
                     fontFamily = manropeFamily,
                     fontSize = 14.sp
                 )
@@ -305,8 +312,13 @@ fun Details() {
 
                 Text(
                     text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
-                            append("5 Reviews")
+                        withStyle(
+                            style = SpanStyle(
+                                textDecoration = TextDecoration.Underline,
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append("5 reviews")
                         }
                     },
                     fontFamily = manropeFamily,
@@ -329,33 +341,211 @@ fun Details() {
                 fontSize = 14.sp
             )
         }
-
-        Divider(
-            color = Color.LightGray,
-            thickness = 1.dp,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 18.dp)
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
+                .padding(horizontal = 20.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Entire home hosted by Andrew",
+                text = "Entire home hosted by Andrew Letman",
                 fontFamily = manropeFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 19.sp
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                modifier = Modifier.weight(2.5f)
             )
-            Image(
-                painter = painterResource(id = R.drawable.travel),
-                contentDescription = "Andrew Image",
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://storage.googleapis.com/leizen-frontend.appspot.com/hotel/211cf36fe68a08d480e520920e8184e7?GoogleAccessId=firebase-adminsdk-pe7p9%40leizen-frontend.iam.gserviceaccount.com&Expires=16749763200&Signature=WRYINQ3MPLt%2FyMpuAN0WkIiy%2B%2BZE6vf69mDV8hvVtJQb1NEJ33I9Y2VD6RsXn431T%2B04%2Fp%2FNoEwTSte4w5VADev4xRlWTZvc5EBQxCBnYNpTmfl5A6608XzyICFied0%2B9ym%2FB4krCDtgXxQpD2nac%2FBTGWmqvYqWpFHmyLdFyVulhPlXtWOlxQ2MyP0%2FkpramA3o%2B0TA4utBJM%2F%2BUu21Ogh8YXzqcE%2B093Jxj%2BXA7js0Bb4%2FIkPhxSWKk4JYcTMEFVWBWSBZ2bBvZlVeHRDtX%2Bz%2BGVY7FFKocKTHtTAGnqdvCZoQJs8uAqaBem%2BEzDNdAqJ%2FrxFcR4xC%2FGpikMg%2BXg%3D%3D")
+                    .crossfade(true)
+                    .build(),
+                placeholder = painterResource(R.drawable.placeholder),
+                contentDescription = "House",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(60.dp)
+                    .weight(0.5f)
+                    .size(50.dp)
                     .padding(start = 6.dp)
                     .clip(CircleShape)
+            )
+        }
+        Divider(
+            color = Color.LightGray,
+            thickness = 0.4.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+        )
+        TravelItemDetails()
+        Divider(
+            color = Color.LightGray.copy(alpha = 0.6f),
+            thickness = 0.4.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+        )
+        EmergencyBookingDetails()
+        Divider(
+            color = Color.LightGray.copy(alpha = 0.6f),
+            thickness = 0.4.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+        )
+    }
+}
+
+@Composable
+fun TravelItemDetails() {
+    val items = listOf(
+        DetailsDrawable("bath", R.drawable.shower, "2 bath"),
+        DetailsDrawable("bed", R.drawable.bed, "2 bed"),
+        DetailsDrawable("bedroom", R.drawable.bedroom, "2 bedroom"),
+        DetailsDrawable("guests", R.drawable.guests, "2 guests")
+    )
+
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp, bottom = 6.dp)
+    ) {
+        items(items.size) { item ->
+            ItemCard(items[item])
+        }
+    }
+}
+
+@Preview
+@Composable
+fun EmergencyBookingDetails() {
+    Column(
+        modifier = Modifier.padding(horizontal = 30.dp, vertical = 6.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.door),
+                contentDescription = "Icon",
+                modifier = Modifier
+                    .size(32.dp)
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "Self check-in",
+                    fontFamily = manropeFamily,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = "True",
+                    fontFamily = manropeFamily,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray
+                )
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.discount),
+                contentDescription = "Icon",
+                modifier = Modifier
+                    .size(32.dp)
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "Discounted Percentage",
+                    fontFamily = manropeFamily,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = "10",
+                    fontFamily = manropeFamily,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray
+                )
+            }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.door),
+                contentDescription = "Icon",
+                modifier = Modifier
+                    .size(32.dp)
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "Cancellation Policy",
+                    fontFamily = manropeFamily,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = "Flexible",
+                    fontFamily = manropeFamily,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Gray
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ItemCard(item: DetailsDrawable) {
+    Card(
+        modifier = Modifier
+            .width(120.dp)
+            .padding(top = 4.dp, start = 20.dp)
+            .clip(RoundedCornerShape(12.dp)),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        elevation = CardDefaults.cardElevation(0.dp),
+        border = BorderStroke(width = 1.dp, color = Color.LightGray)
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Image(
+                painter = painterResource(id = item.imageResId),
+                contentDescription = "Icon",
+                modifier = Modifier
+                    .size(26.dp)
+                    .padding(bottom = 8.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Text(
+                text = item.text,
+                fontFamily = manropeFamily,
+                fontSize = 13.sp,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
             )
         }
     }
