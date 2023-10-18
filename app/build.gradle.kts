@@ -91,6 +91,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha02")
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("androidx.compose.ui:ui-util:1.5.3")
 }
 // Allow references to generated code
 kapt {
