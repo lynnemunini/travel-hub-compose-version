@@ -188,7 +188,7 @@ fun FavoriteContainer(navController: NavController, modifier: Modifier) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp, start = 16.dp, end = 16.dp),
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         Box(
@@ -418,6 +418,7 @@ fun Details(travelItem: TravelItem) {
                 .fillMaxWidth()
                 .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
         )
+        LocationAddress()
     }
 }
 
@@ -546,12 +547,12 @@ fun Description(travelItem: TravelItem) {
         modifier = Modifier.padding(horizontal = 30.dp, vertical = 6.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Column {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 text = "Description",
                 fontFamily = manropeFamily,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 15.sp
+                fontSize = 16.sp
             )
             Text(
                 text = travelItem.description.uppercase(Locale.ROOT),
@@ -560,12 +561,12 @@ fun Description(travelItem: TravelItem) {
                 fontSize = 13.sp
             )
         }
-        Column {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 text = "Amenities",
                 fontFamily = manropeFamily,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 15.sp
+                fontSize = 16.sp
             )
             Text(
                 text = amenities,
@@ -574,6 +575,21 @@ fun Description(travelItem: TravelItem) {
                 fontSize = 13.sp
             )
         }
+    }
+}
+
+@Composable
+fun LocationAddress() {
+    Column(
+        modifier = Modifier.padding(horizontal = 30.dp, vertical = 6.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "Where you'll be 😄 ",
+            fontFamily = manropeFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 18.sp
+        )
     }
 }
 
