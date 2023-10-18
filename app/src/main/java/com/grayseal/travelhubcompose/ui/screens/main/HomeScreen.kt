@@ -5,18 +5,25 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -29,12 +36,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -45,8 +56,11 @@ import com.grayseal.travelhubcompose.R
 import com.grayseal.travelhubcompose.components.SearchInputField
 import com.grayseal.travelhubcompose.navigation.TravelHubScreens
 import com.grayseal.travelhubcompose.ui.screens.signin.SignInScreen
+import com.grayseal.travelhubcompose.ui.theme.Grey200
 import com.grayseal.travelhubcompose.ui.theme.Yellow200
+import com.grayseal.travelhubcompose.ui.theme.manropeFamily
 import com.grayseal.travelhubcompose.utils.rememberFirebaseAuthLauncher
+import com.grayseal.travelhubcompose.utils.toTitleCase
 
 @Composable
 fun HomeScreen(navController: NavController, entriesViewModel: EntriesViewModel) {
@@ -161,26 +175,110 @@ fun HomeScreenContents(
 
 @Composable
 fun TravelItemCard(travelItem: TravelItem) {
-    Card(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(260.dp)
-            .padding(bottom = 20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
-        elevation = CardDefaults.cardElevation(2.dp),
-        shape = RoundedCornerShape(16.dp)
+            .height(290.dp)
+            .padding(bottom = 20.dp)
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(travelItem.photos[2])
-                .crossfade(true)
-                .build(),
-            placeholder = painterResource(R.drawable.placeholder),
-            contentDescription = "House",
-            contentScale = ContentScale.Crop,
+        Card(
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(16.dp))
-        )
+                .clip(RoundedCornerShape(16.dp)),
+            elevation = CardDefaults.cardElevation(1.dp)
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(travelItem.photos[1])
+                    .crossfade(true)
+                    .build(),
+                placeholder = painterResource(R.drawable.placeholder),
+                contentDescription = "House",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+                .height(90.dp)
+                .align(Alignment.BottomStart),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
+            elevation = CardDefaults.cardElevation(1.dp),
+        ) {
+            Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
+                Text(
+                    text = toTitleCase(travelItem.name),
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        fontFamily = manropeFamily
+                    )
+                )
+                Text(
+                    text = toTitleCase(travelItem.location.name),
+                    style = TextStyle(
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                        fontFamily = manropeFamily
+                    ),
+                    color = Color.Gray
+                )
+                RatingPriceView(travelItem)
+            }
+        }
+    }
+}
+
+@Composable
+fun RatingPriceView(travelItem: TravelItem) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp)
+    ) {
+        Box(
+            modifier = Modifier.weight(1f)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    painter = painterResource(id = R.drawable.star),
+                    contentDescription = "Stars",
+                    modifier = Modifier
+                        .size(22.dp)
+                )
+
+                Text(
+                    text = "${travelItem.rating} Rating",
+                    fontFamily = manropeFamily,
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Box(
+            modifier = Modifier
+        ) {
+            Row {
+                Text(
+                    text = "${travelItem.price.currency} ${travelItem.price.amount}",
+                    fontFamily = manropeFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+
+                Text(
+                    text = "/night",
+                    fontFamily = manropeFamily,
+                    color = Grey200,
+                    fontSize = 12.sp,
+                    modifier = Modifier.align(Alignment.Bottom)
+                )
+            }
+        }
     }
 }
