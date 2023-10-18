@@ -48,8 +48,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,6 +63,8 @@ import com.grayseal.travelhubcompose.data.model.TravelItem
 import com.grayseal.travelhubcompose.ui.screens.main.EntriesViewModel
 import com.grayseal.travelhubcompose.ui.theme.Yellow200
 import com.grayseal.travelhubcompose.ui.theme.manropeFamily
+import com.grayseal.travelhubcompose.utils.toTitleCase
+import java.util.Locale
 import kotlin.math.absoluteValue
 
 @Composable
@@ -107,7 +109,7 @@ fun DetailsScreenElements(navController: NavController, travelItem: TravelItem) 
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         HorizontalImagePager(navController, images = travelItem.photos)
-        Details()
+        Details(travelItem)
     }
 }
 
@@ -254,14 +256,14 @@ fun FavoriteContainer(navController: NavController, modifier: Modifier) {
 }
 
 @Composable
-fun Details() {
+fun Details(travelItem: TravelItem) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(vertical = 4.dp)
     ) {
         Text(
-            text = "Olohoro Ndogo - a romantic Rift Valley retreat",
+            text = toTitleCase(travelItem.name),
             fontFamily = manropeFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 23.sp,
@@ -285,7 +287,7 @@ fun Details() {
                 )
 
                 Text(
-                    text = "4.5",
+                    text = "${travelItem.rating} Rating",
                     fontFamily = manropeFamily,
                     fontSize = 14.sp
                 )
@@ -305,7 +307,7 @@ fun Details() {
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.reviews),
-                    contentDescription = "Stars",
+                    contentDescription = "Reviews",
                     modifier = Modifier
                         .size(18.dp)
                 )
@@ -318,7 +320,7 @@ fun Details() {
                                 fontWeight = FontWeight.Bold
                             )
                         ) {
-                            append("5 reviews")
+                            append("${travelItem.reviews.size} reviews")
                         }
                     },
                     fontFamily = manropeFamily,
@@ -336,9 +338,11 @@ fun Details() {
             )
 
             Text(
-                text = "Kajiado County, Kenya",
+                text = toTitleCase(travelItem.location.name),
                 fontFamily = manropeFamily,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
         Row(
@@ -349,7 +353,7 @@ fun Details() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Entire home hosted by Andrew Letman",
+                text = "Entire home hosted by ${toTitleCase(travelItem.user.firstName + " ${travelItem.user.lastName}")}",
                 fontFamily = manropeFamily,
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp,
@@ -358,7 +362,7 @@ fun Details() {
 
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://storage.googleapis.com/leizen-frontend.appspot.com/hotel/211cf36fe68a08d480e520920e8184e7?GoogleAccessId=firebase-adminsdk-pe7p9%40leizen-frontend.iam.gserviceaccount.com&Expires=16749763200&Signature=WRYINQ3MPLt%2FyMpuAN0WkIiy%2B%2BZE6vf69mDV8hvVtJQb1NEJ33I9Y2VD6RsXn431T%2B04%2Fp%2FNoEwTSte4w5VADev4xRlWTZvc5EBQxCBnYNpTmfl5A6608XzyICFied0%2B9ym%2FB4krCDtgXxQpD2nac%2FBTGWmqvYqWpFHmyLdFyVulhPlXtWOlxQ2MyP0%2FkpramA3o%2B0TA4utBJM%2F%2BUu21Ogh8YXzqcE%2B093Jxj%2BXA7js0Bb4%2FIkPhxSWKk4JYcTMEFVWBWSBZ2bBvZlVeHRDtX%2Bz%2BGVY7FFKocKTHtTAGnqdvCZoQJs8uAqaBem%2BEzDNdAqJ%2FrxFcR4xC%2FGpikMg%2BXg%3D%3D")
+                    .data(travelItem.user.profilePictureURL)
                     .crossfade(true)
                     .build(),
                 placeholder = painterResource(R.drawable.placeholder),
@@ -378,7 +382,7 @@ fun Details() {
                 .fillMaxWidth()
                 .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
         )
-        TravelItemDetails()
+        TravelItemDetails(travelItem)
         Divider(
             color = Color.LightGray.copy(alpha = 0.6f),
             thickness = 0.4.dp,
@@ -386,7 +390,15 @@ fun Details() {
                 .fillMaxWidth()
                 .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
         )
-        EmergencyBookingDetails()
+        EmergencyBookingDetails(travelItem)
+        Divider(
+            color = Color.LightGray.copy(alpha = 0.6f),
+            thickness = 0.4.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+        )
+        Description(travelItem)
         Divider(
             color = Color.LightGray.copy(alpha = 0.6f),
             thickness = 0.4.dp,
@@ -398,12 +410,12 @@ fun Details() {
 }
 
 @Composable
-fun TravelItemDetails() {
+fun TravelItemDetails(travelItem: TravelItem) {
     val items = listOf(
-        DetailsDrawable("bath", R.drawable.shower, "2 bath"),
-        DetailsDrawable("bed", R.drawable.bed, "2 bed"),
-        DetailsDrawable("bedroom", R.drawable.bedroom, "2 bedroom"),
-        DetailsDrawable("guests", R.drawable.guests, "2 guests")
+        DetailsDrawable("bath", R.drawable.shower, "${travelItem.details.bath}"),
+        DetailsDrawable("bed", R.drawable.bed, "${travelItem.details.beds}"),
+        DetailsDrawable("bedroom", R.drawable.bedroom, "${travelItem.details.bedroom}"),
+        DetailsDrawable("guests", R.drawable.guests, "${travelItem.details.guests}")
     )
 
     LazyRow(
@@ -417,9 +429,8 @@ fun TravelItemDetails() {
     }
 }
 
-@Preview
 @Composable
-fun EmergencyBookingDetails() {
+fun EmergencyBookingDetails(travelItem: TravelItem) {
     Column(
         modifier = Modifier.padding(horizontal = 30.dp, vertical = 6.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -445,7 +456,7 @@ fun EmergencyBookingDetails() {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "True",
+                    text = toTitleCase(travelItem.emergencyBooking.selfCheckin.toString()),
                     fontFamily = manropeFamily,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
@@ -475,7 +486,7 @@ fun EmergencyBookingDetails() {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "10",
+                    text = "${travelItem.emergencyBooking.discountPercentage}% ",
                     fontFamily = manropeFamily,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
@@ -505,13 +516,51 @@ fun EmergencyBookingDetails() {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "Flexible",
+                    text = travelItem.cancellationPolicy,
                     fontFamily = manropeFamily,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color.Gray
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun Description(travelItem: TravelItem) {
+    val amenities = travelItem.amenities.joinToString(", ")
+    Column(
+        modifier = Modifier.padding(horizontal = 30.dp, vertical = 6.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Column {
+            Text(
+                text = "Description",
+                fontFamily = manropeFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp
+            )
+            Text(
+                text = travelItem.description.uppercase(Locale.ROOT),
+                fontFamily = manropeFamily,
+                fontWeight = FontWeight.Normal,
+                fontSize = 13.sp
+            )
+        }
+        Column {
+            Text(
+                text = "Amenities",
+                fontFamily = manropeFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp
+            )
+            Text(
+                text = amenities,
+                fontFamily = manropeFamily,
+                fontWeight = FontWeight.Normal,
+                fontSize = 13.sp
+            )
         }
     }
 }
@@ -541,7 +590,7 @@ fun ItemCard(item: DetailsDrawable) {
             )
 
             Text(
-                text = item.text,
+                text = "${item.text} ${item.id}",
                 fontFamily = manropeFamily,
                 fontSize = 13.sp,
                 modifier = Modifier
