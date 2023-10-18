@@ -48,7 +48,7 @@ fun TravelHubNavigation() {
             type = NavType.StringType
         })) { navBack ->
             navBack.arguments?.getString("id").let { id ->
-                DetailsScreen(navController = navController, id = id)
+                DetailsScreen(navController = navController, entriesViewModel, id = id)
             }
         }
     }

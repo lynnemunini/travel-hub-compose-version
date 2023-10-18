@@ -85,13 +85,13 @@ fun HomeScreen(navController: NavController, entriesViewModel: EntriesViewModel)
     if (user == null) {
         SignInScreen(navController, launcher)
     } else {
-        HomeScreenContentsState(entriesViewModel)
+        HomeScreenContentsState(entriesViewModel, navController)
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun HomeScreenContentsState(entriesViewModel: EntriesViewModel) {
+fun HomeScreenContentsState(entriesViewModel: EntriesViewModel, navController: NavController) {
     val searchState = rememberSaveable {
         mutableStateOf("")
     }
@@ -121,6 +121,7 @@ fun HomeScreenContentsState(entriesViewModel: EntriesViewModel) {
         })
     }
     HomeScreenContents(
+        navController,
         searchState = searchState,
         keyboardController = keyboardController,
         valid = valid,
@@ -132,6 +133,7 @@ fun HomeScreenContentsState(entriesViewModel: EntriesViewModel) {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreenContents(
+    navController: NavController,
     searchState: MutableState<String>,
     keyboardController: SoftwareKeyboardController?,
     valid: Boolean,
@@ -174,18 +176,28 @@ fun HomeScreenContents(
                 .padding(top = 6.dp)
         ) {
             items(travelItems.size) { travelItem ->
-                TravelItemCard(travelItems[travelItem])
+                TravelItemCard(travelItems[travelItem], navController)
             }
         }
     }
 }
 
 @Composable
-fun TravelItemCard(travelItem: TravelItem) {
+fun TravelItemCard(travelItem: TravelItem, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(290.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(
+                    bounded = true,
+                    radius = Dp.Hairline
+                ),
+                onClick = {
+                    navController.navigate(route = TravelHubScreens.DetailsScreen.name + "/${travelItem._id}")
+                }
+            )
             .padding(bottom = 20.dp)
     ) {
         Card(
@@ -357,4 +369,3 @@ fun FavoriteContainer(travelItem: TravelItem, modifier: Modifier) {
         }
     }
 }
-
