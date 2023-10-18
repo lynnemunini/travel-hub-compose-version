@@ -3,6 +3,7 @@ package com.grayseal.travelhubcompose.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -293,7 +294,7 @@ fun SearchInputField(
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(40.dp)
     ) {
         OutlinedTextField(
             value = valueState.value,
@@ -305,7 +306,8 @@ fun SearchInputField(
                     painter = painterResource(id = R.drawable.search),
                     contentDescription = "Search",
                     modifier = Modifier
-                        .size(30.dp)
+                        .size(40.dp)
+                        .padding(start = 8.dp)
                         .background(color = Color.Transparent),
                     colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground)
                 )
@@ -322,12 +324,21 @@ fun SearchInputField(
             modifier = Modifier
                 .fillMaxWidth(),
             placeholder = {
-                Text(
-                    text = labelId,
-                    fontFamily = manropeFamily,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                Column {
+                    Text(
+                        text = labelId,
+                        fontFamily = manropeFamily,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "Anytime • Anywhere • Any week",
+                        fontFamily = manropeFamily,
+                        fontSize = 12.sp,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium,
+                    )
+                }
             },
             shape = RoundedCornerShape(16.dp),
             colors = TextFieldDefaults.outlinedTextFieldColors(

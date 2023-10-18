@@ -26,6 +26,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -58,9 +59,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.grayseal.travelhubcompose.data.model.TravelItem
 import com.grayseal.travelhubcompose.R
 import com.grayseal.travelhubcompose.components.SearchInputField
+import com.grayseal.travelhubcompose.data.model.TravelItem
 import com.grayseal.travelhubcompose.navigation.TravelHubScreens
 import com.grayseal.travelhubcompose.ui.screens.signin.SignInScreen
 import com.grayseal.travelhubcompose.ui.theme.Grey200
@@ -89,7 +90,7 @@ fun HomeScreen(navController: NavController, entriesViewModel: EntriesViewModel)
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContentsState(entriesViewModel: EntriesViewModel, navController: NavController) {
     val searchState = rememberSaveable {
