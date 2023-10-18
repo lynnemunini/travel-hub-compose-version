@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Card
@@ -44,6 +45,7 @@ import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -198,6 +200,7 @@ fun TravelItemCard(travelItem: TravelItem) {
                 modifier = Modifier.fillMaxSize()
             )
         }
+        FavoriteContainer(travelItem = travelItem, modifier = Modifier.align(Alignment.TopStart))
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -282,3 +285,53 @@ fun RatingPriceView(travelItem: TravelItem) {
         }
     }
 }
+
+@Composable
+fun FavoriteContainer(travelItem: TravelItem, modifier: Modifier) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp, start = 16.dp, end = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .clip(RoundedCornerShape(28.dp))
+                .background(Color.Black)
+        ) {
+            Text(
+                text = travelItem.uniqueType,
+                fontFamily = manropeFamily,
+                color = Color.White,
+                fontSize = 13.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 4.dp)
+                    .align(Alignment.Center)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .size(40.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(shape = CircleShape, color = MaterialTheme.colorScheme.background)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.favorite),
+                    contentDescription = "Favourite",
+                    tint = Color.Black,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(22.dp)
+                        .align(Alignment.Center)
+                )
+            }
+        }
+    }
+}
+
