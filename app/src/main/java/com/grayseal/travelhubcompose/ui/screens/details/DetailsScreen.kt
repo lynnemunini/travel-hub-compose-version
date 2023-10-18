@@ -337,13 +337,25 @@ fun Details(travelItem: TravelItem) {
                 modifier = Modifier.padding(horizontal = 2.dp)
             )
 
-            Text(
-                text = toTitleCase(travelItem.location.name),
-                fontFamily = manropeFamily,
-                fontSize = 14.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.location),
+                    contentDescription = "Location",
+                    modifier = Modifier
+                        .size(18.dp)
+                )
+
+                Text(
+                    text = toTitleCase(travelItem.location.name),
+                    fontFamily = manropeFamily,
+                    fontSize = 14.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
         Row(
             modifier = Modifier
