@@ -450,13 +450,6 @@ fun Details(travelItem: TravelItem) {
                 .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
         )
         HouseRulesDetails(travelItem)
-        Divider(
-            color = Color.LightGray.copy(alpha = 0.6f),
-            thickness = 0.4.dp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
-        )
     }
 }
 
@@ -775,11 +768,11 @@ fun ReserveCard(travelItem: TravelItem) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 20.dp)) {
                 Text(
                     text = "${travelItem.price.currency} ${travelItem.price.amount}",
                     fontFamily = manropeFamily,
@@ -792,14 +785,12 @@ fun ReserveCard(travelItem: TravelItem) {
                     fontWeight = FontWeight.Normal,
                     fontSize = 15.sp,
                     modifier = Modifier
-                        .padding(start = 4.dp)
                         .align(Alignment.CenterVertically)
                 )
             }
             Button(
                 onClick = {
                 },
-                modifier = Modifier.padding(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Yellow200),
                 interactionSource = MutableInteractionSource()
             ) {
