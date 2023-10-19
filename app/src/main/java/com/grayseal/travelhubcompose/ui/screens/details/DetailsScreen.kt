@@ -1,21 +1,13 @@
 package com.grayseal.travelhubcompose.ui.screens.details
 
+import android.view.LayoutInflater
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -23,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,11 +26,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +46,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -76,7 +66,11 @@ import com.grayseal.travelhubcompose.data.model.TravelItem
 import com.grayseal.travelhubcompose.ui.screens.main.EntriesViewModel
 import com.grayseal.travelhubcompose.ui.theme.Yellow200
 import com.grayseal.travelhubcompose.ui.theme.manropeFamily
+import com.grayseal.travelhubcompose.utils.CalendarDecorator
 import com.grayseal.travelhubcompose.utils.toTitleCase
+import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.absoluteValue
 
@@ -441,7 +435,7 @@ fun Details(travelItem: TravelItem) {
                 .fillMaxWidth()
                 .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
         )
-        AvailabilityDetails(travelItem)
+        CalendarView(travelItem)
         Divider(
             color = Color.LightGray.copy(alpha = 0.6f),
             thickness = 0.4.dp,
@@ -674,16 +668,42 @@ fun LocationAddress(travelItem: TravelItem) {
 }
 
 @Composable
-fun AvailabilityDetails(travelItem: TravelItem) {
+fun CalendarView(travelItem: TravelItem) {
+    val dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+
+    val bookedDates = travelItem.bookedDates.mapNotNull { dateString ->
+        try {
+            org.threeten.bp.LocalDate.parse(dateString, dateFormat)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    val bookedDays: List<CalendarDay> = bookedDates.mapNotNull { localDate ->
+        CalendarDay.from(localDate)
+    }
+
     Column(
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
     ) {
         Text(
             text = "Availability",
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
             fontFamily = manropeFamily,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 18.sp
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        // Use AndroidView to add MaterialCalendarView
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                val view = LayoutInflater.from(context).inflate(R.layout.calendar_layout, null)
+                view.findViewById<MaterialCalendarView>(R.id.calendarView)
+                    .addDecorator(CalendarDecorator(android.graphics.Color.RED, bookedDays))
+                view
+            }
         )
     }
 }
@@ -772,7 +792,10 @@ fun ReserveCard(travelItem: TravelItem) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 20.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 20.dp)
+            ) {
                 Text(
                     text = "${travelItem.price.currency} ${travelItem.price.amount}",
                     fontFamily = manropeFamily,
