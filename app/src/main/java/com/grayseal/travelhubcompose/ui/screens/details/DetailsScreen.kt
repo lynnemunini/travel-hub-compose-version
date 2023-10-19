@@ -37,7 +37,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -382,7 +384,6 @@ fun Details(travelItem: TravelItem) {
                 fontSize = 14.sp,
                 modifier = Modifier.weight(2.5f)
             )
-
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(travelItem.user.profilePictureURL)
@@ -397,6 +398,31 @@ fun Details(travelItem: TravelItem) {
                     .padding(start = 6.dp)
                     .clip(CircleShape)
             )
+        }
+        if (travelItem.tags.isNotEmpty()) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.tag),
+                    contentDescription = "Tags",
+                    tint = Yellow200,
+                    modifier = Modifier
+                        .size(18.dp)
+                )
+
+                Text(
+                    text = travelItem.tags.joinToString(", "),
+                    fontFamily = manropeFamily,
+                    fontSize = 12.sp,
+                    style = TextStyle(fontStyle = FontStyle.Italic),
+                    maxLines = 1,
+                    color = Color.Gray,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
         Divider(
             color = Color.LightGray,
