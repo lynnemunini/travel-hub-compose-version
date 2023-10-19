@@ -1,6 +1,5 @@
 package com.grayseal.travelhubcompose.ui.screens.details
 
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -25,6 +24,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -41,9 +42,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -109,21 +110,23 @@ fun DetailsScreen(navController: NavController, entriesViewModel: EntriesViewMod
     }
 }
 
-
 @Composable
 fun DetailsScreenElements(navController: NavController, travelItem: TravelItem) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .background(MaterialTheme.colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
-        HorizontalImagePager(navController, images = travelItem.photos)
-        Details(travelItem)
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
+            HorizontalImagePager(navController, images = travelItem.photos)
+            Details(travelItem)
+        }
+        ReserveCard(travelItem = travelItem)
     }
 }
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -377,7 +380,7 @@ fun Details(travelItem: TravelItem) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Entire home hosted by ${toTitleCase(travelItem.user.firstName + " ${travelItem.user.lastName}")}",
+                text = "${travelItem.space} hosted by ${toTitleCase(travelItem.user.firstName + " ${travelItem.user.lastName}")}",
                 fontFamily = manropeFamily,
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp,
@@ -431,6 +434,29 @@ fun Details(travelItem: TravelItem) {
                 .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
         )
         LocationAddress(travelItem)
+        Divider(
+            color = Color.LightGray.copy(alpha = 0.6f),
+            thickness = 0.4.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+        )
+        AvailabilityDetails(travelItem)
+        Divider(
+            color = Color.LightGray.copy(alpha = 0.6f),
+            thickness = 0.4.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+        )
+        HouseRulesDetails(travelItem)
+        Divider(
+            color = Color.LightGray.copy(alpha = 0.6f),
+            thickness = 0.4.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
+        )
     }
 }
 
@@ -556,7 +582,7 @@ fun EmergencyBookingDetails(travelItem: TravelItem) {
 fun Description(travelItem: TravelItem) {
     val amenities = travelItem.amenities.joinToString(", ")
     Column(
-        modifier = Modifier.padding(horizontal = 30.dp, vertical = 6.dp),
+        modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -608,7 +634,7 @@ fun LocationAddress(travelItem: TravelItem) {
         .snippet(toTitleCase(travelItem.name))
 
     Column(
-        modifier = Modifier.padding(horizontal = 30.dp, vertical = 6.dp),
+        modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
@@ -617,7 +643,6 @@ fun LocationAddress(travelItem: TravelItem) {
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp
         )
-
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -645,6 +670,59 @@ fun LocationAddress(travelItem: TravelItem) {
 
                 }
             }
+        }
+        Text(
+            text = travelItem.location.name,
+            fontFamily = manropeFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp
+        )
+    }
+}
+
+@Composable
+fun AvailabilityDetails(travelItem: TravelItem) {
+    Column(
+        modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "Availability",
+            fontFamily = manropeFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 18.sp
+        )
+    }
+}
+
+@Composable
+fun HouseRulesDetails(travelItem: TravelItem) {
+    Column(
+        modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "House rules",
+            fontFamily = manropeFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 18.sp
+        )
+
+        Column {
+            Text(
+                text = "Check-in: ${travelItem.rules.checkIn} AM",
+                fontFamily = manropeFamily,
+                color = Color.Gray,
+                fontWeight = FontWeight.Normal,
+                fontSize = 13.sp
+            )
+            Text(
+                text = "Checkout before: ${travelItem.rules.checkOut} PM",
+                fontFamily = manropeFamily,
+                color = Color.Gray,
+                fontWeight = FontWeight.Normal,
+                fontSize = 13.sp
+            )
         }
     }
 }
@@ -680,6 +758,59 @@ fun ItemCard(item: DetailsDrawable) {
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
             )
+        }
+    }
+}
+
+@Composable
+fun ReserveCard(travelItem: TravelItem) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(2.dp),
+        shape = RectangleShape,
+        border = BorderStroke(width = 0.2.dp, color = Color.LightGray.copy(alpha = 0.6f))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "${travelItem.price.currency} ${travelItem.price.amount}",
+                    fontFamily = manropeFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+                Text(
+                    text = " / night",
+                    fontFamily = manropeFamily,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 15.sp,
+                    modifier = Modifier
+                        .padding(start = 4.dp)
+                        .align(Alignment.CenterVertically)
+                )
+            }
+            Button(
+                onClick = {
+                },
+                modifier = Modifier.padding(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Yellow200),
+                interactionSource = MutableInteractionSource()
+            ) {
+                Text(
+                    text = "Reserve",
+                    fontFamily = manropeFamily,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
         }
     }
 }
