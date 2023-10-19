@@ -2,7 +2,9 @@
 
 Travel Hub Compose Version is an Android application that offers a modern and seamless experience for travelers to discover and preview potential host places, explore accommodations, restaurants, attractions, and more. With the latest technologies, this app makes planning your adventures easier than ever.
 
-![Travel Hub in Action](assets/demo.gif)
+Gif of the app in action.
+
+<img src="assets/demo.gif" width="40%" alt="Travel Hub in Action">
 
 ## Features 🚀
 
