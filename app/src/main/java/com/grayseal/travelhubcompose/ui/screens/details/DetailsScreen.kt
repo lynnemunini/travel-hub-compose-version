@@ -400,9 +400,10 @@ fun Details(travelItem: TravelItem) {
             )
         }
         if (travelItem.tags.isNotEmpty()) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
