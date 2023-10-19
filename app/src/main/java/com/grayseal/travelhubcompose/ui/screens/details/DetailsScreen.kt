@@ -70,6 +70,8 @@ import com.grayseal.travelhubcompose.utils.CalendarDecorator
 import com.grayseal.travelhubcompose.utils.toTitleCase
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.absoluteValue
@@ -276,7 +278,7 @@ fun Details(travelItem: TravelItem) {
             fontFamily = manropeFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 23.sp,
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 12.dp)
         )
         Row(
             modifier = Modifier
@@ -435,7 +437,7 @@ fun Details(travelItem: TravelItem) {
                 .fillMaxWidth()
                 .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
         )
-        CalendarView(travelItem)
+        HouseRulesDetails(travelItem)
         Divider(
             color = Color.LightGray.copy(alpha = 0.6f),
             thickness = 0.4.dp,
@@ -443,7 +445,7 @@ fun Details(travelItem: TravelItem) {
                 .fillMaxWidth()
                 .padding(top = 12.dp, bottom = 12.dp, start = 20.dp, end = 20.dp)
         )
-        HouseRulesDetails(travelItem)
+        CalendarView(travelItem)
     }
 }
 
@@ -669,23 +671,31 @@ fun LocationAddress(travelItem: TravelItem) {
 
 @Composable
 fun CalendarView(travelItem: TravelItem) {
-    val dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+    val context = LocalContext.current
 
-    val bookedDates = travelItem.bookedDates.mapNotNull { dateString ->
-        try {
-            org.threeten.bp.LocalDate.parse(dateString, dateFormat)
-        } catch (e: Exception) {
-            null
+    val view = LayoutInflater.from(context).inflate(R.layout.calendar_layout, null)
+    val calendarView = view.findViewById<MaterialCalendarView>(R.id.calendarView)
+    LaunchedEffect(travelItem) {
+        val dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+
+        val bookedDates = withContext(Dispatchers.IO) {
+            travelItem.bookedDates.mapNotNull { dateString ->
+                try {
+                    org.threeten.bp.LocalDate.parse(dateString, dateFormat)
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
-    }
 
-    val bookedDays: List<CalendarDay> = bookedDates.mapNotNull { localDate ->
-        CalendarDay.from(localDate)
+        val bookedDays = bookedDates.mapNotNull { localDate ->
+            CalendarDay.from(localDate)
+        }
+        calendarView.addDecorator(CalendarDecorator(android.graphics.Color.RED, bookedDays))
     }
 
     Column(
         modifier = Modifier
-            .padding(16.dp)
             .fillMaxWidth()
     ) {
         Text(
@@ -693,15 +703,13 @@ fun CalendarView(travelItem: TravelItem) {
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             fontFamily = manropeFamily,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 6.dp)
         )
-        // Use AndroidView to add MaterialCalendarView
         AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { context ->
-                val view = LayoutInflater.from(context).inflate(R.layout.calendar_layout, null)
-                view.findViewById<MaterialCalendarView>(R.id.calendarView)
-                    .addDecorator(CalendarDecorator(android.graphics.Color.RED, bookedDays))
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 4.dp),
+            factory = {
                 view
             }
         )
