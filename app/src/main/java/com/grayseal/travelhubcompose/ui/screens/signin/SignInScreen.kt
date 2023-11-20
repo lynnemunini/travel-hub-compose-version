@@ -73,6 +73,7 @@ fun UserForm(
     val passwordVisibility = remember { mutableStateOf(false) }
     val passwordFocusRequest = FocusRequester.Default
     val context = LocalContext.current
+    // ID token required for authentication
     val token = stringResource(id = R.string.server_client_id)
 
     var signInResult by remember { mutableStateOf<SignInResult?>(null) }
@@ -88,6 +89,7 @@ fun UserForm(
         passwordVisibility = passwordVisibility,
         passwordFocusRequest = passwordFocusRequest,
         continueWithGoogle = {
+            // Set up Google Sign-In and launch the intent
             val gso =
                 GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(token)

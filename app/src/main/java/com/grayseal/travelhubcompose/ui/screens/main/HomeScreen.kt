@@ -90,7 +90,7 @@ fun HomeScreen(navController: NavController, entriesViewModel: EntriesViewModel)
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreenContentsState(entriesViewModel: EntriesViewModel, navController: NavController) {
     val searchState = rememberSaveable {

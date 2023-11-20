@@ -14,7 +14,6 @@ import com.prolificinteractive.materialcalendarview.spans.DotSpan
  */
 class CalendarDecorator(private val color: Int, private val dates: Collection<CalendarDay>) :
     DayViewDecorator {
-
     /**
      * Determines whether a given date should be decorated.
      *

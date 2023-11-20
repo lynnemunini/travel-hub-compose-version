@@ -88,6 +88,7 @@ fun UserForm(
         passwordVisibility = passwordVisibility,
         passwordFocusRequest = passwordFocusRequest,
         continueWithGoogle = {
+            // Launch intent for google sign up
             val gso =
                 GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(token)

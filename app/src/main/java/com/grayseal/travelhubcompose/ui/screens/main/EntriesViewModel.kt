@@ -26,12 +26,15 @@ class EntriesViewModel : ViewModel() {
      * @param callback A callback function to handle the list of travel entries once fetched.
      */
     fun getAllEntries(context: Context, callback: (List<TravelItem>) -> Unit) {
+        // Allow asynchronous execution without blocking the main thread and affecting UI performance
         viewModelScope.launch {
             val entries = withContext(Dispatchers.IO) {
+                // Read the json file
                 val jsonFile = context.resources.openRawResource(R.raw.listings)
                 val reader = InputStreamReader(jsonFile)
 
                 val listType = object : TypeToken<List<TravelItem>>() {}.type
+                // Use Gson library to deserialize the JSON content
                 Gson().fromJson<List<TravelItem>>(reader, listType)
             }
             callback(entries)
